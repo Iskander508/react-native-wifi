@@ -52,7 +52,11 @@ RCT_EXPORT_METHOD(connectToSSID:(NSString*)ssid
         NEHotspotConfiguration* configuration = [[NEHotspotConfiguration alloc] initWithSSID:ssid];
         [[NEHotspotConfigurationManager sharedManager] applyConfiguration:configuration completionHandler:^(NSError * _Nullable error) {
             if (error != nil) {
-                reject(@"nehotspot_error", @"Error while configuring WiFi", error);
+                if (error.code == NEHotspotConfigurationErrorUserDenied) {
+                    reject(@"nehotspot_error", @"USER_DENIED", error);
+                } else {
+                    reject(@"nehotspot_error", @"Error while configuring WiFi", error);
+                }
             } else {
                 resolve(nil);
             }
@@ -73,7 +77,11 @@ RCT_EXPORT_METHOD(connectToProtectedSSID:(NSString*)ssid
         NEHotspotConfiguration* configuration = [[NEHotspotConfiguration alloc] initWithSSID:ssid passphrase:passphrase isWEP:isWEP];
         [[NEHotspotConfigurationManager sharedManager] applyConfiguration:configuration completionHandler:^(NSError * _Nullable error) {
             if (error != nil) {
-                reject(@"nehotspot_error", @"Error while configuring WiFi", error);
+                if (error.code == NEHotspotConfigurationErrorUserDenied) {
+                    reject(@"nehotspot_error", @"USER_DENIED", error);
+                } else {
+                    reject(@"nehotspot_error", @"Error while configuring WiFi", error);
+                }
             } else {
                 resolve(nil);
             }
